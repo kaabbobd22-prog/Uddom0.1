@@ -86,3 +86,11 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Server is flying on port: ${PORT}`);
 });
+// server.js এর শেষে
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server is flying on port: ${PORT}`);
+    });
+}
+
+module.exports = app; // ভেরসেলের জন্য এটি প্রয়োজন
