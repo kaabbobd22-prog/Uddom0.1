@@ -1,16 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const Category = require('../models/Category'); // মডেলের পাথ ঠিক আছে কিনা চেক করবেন
+const Category = require('../models/Category');
 
-// GET all categories
 router.get('/', async (req, res) => {
-    try {
-        const categories = await Category.find();
-        res.status(200).json(categories);
-    } catch (error) {
-        console.error("Category Fetch Error:", error);
-        res.status(500).json({ message: "Failed to load categories" });
-    }
+  try {
+    const categories = await Category.find().lean();
+    res.status(200).json(categories);
+  } catch (error) {
+    console.error("Category Fetch Error:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Failed to load categories",
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined 
+    });
+  }
 });
 
 module.exports = router;

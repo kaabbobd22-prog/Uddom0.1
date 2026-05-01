@@ -26,8 +26,8 @@ const sellerAuthRoutes = require('./routes/seller/auth');
 // ==========================================
 // server.js
 app.use(cors({
-  origin: ['https://your-frontend-link.onrender.com', 'http://localhost:5173'], // ফ্রন্টএন্ডের লিঙ্ক দিন
-  credentials: true
+    origin: ['https://your-frontend-link.onrender.com', 'http://localhost:5173'], // ফ্রন্টএন্ডের লিঙ্ক দিন
+    credentials: true
 }));
 
 app.use(express.json());
@@ -44,7 +44,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 
 // Seller Routes
-app.use('/api/seller', sellerRoutes); 
+app.use('/api/seller', sellerRoutes);
 app.use('/api/seller/auth', sellerAuthRoutes);
 
 // ==========================================
@@ -60,20 +60,20 @@ mongoose.connect(uri)
 // ==========================================
 // প্রতি ১০ মিনিটে সার্ভার নিজেকে হিট করবে যাতে Render স্লিপ মোডে না যায়
 // server.js
-const SERVER_URL = `https://uddom-mern.onrender.com/ping`; // আপনার দেওয়া লিঙ্কটি এখানে বসলো
+const SERVER_URL = `https://uddom0-1.onrender.com/ping`; // আপনার দেওয়া লিঙ্কটি এখানে বসলো
 
 setInterval(async () => {
-  try {
-    const response = await axios.get(SERVER_URL);
-    console.log(`📡 Keep-Alive Ping Sent: Status ${response.status}`);
-  } catch (error) {
-    console.error("❌ Keep-Alive Ping Failed:", error.message);
-  }
+    try {
+        const response = await axios.get(SERVER_URL);
+        console.log(`📡 Keep-Alive Ping Sent: Status ${response.status}`);
+    } catch (error) {
+        console.error("❌ Keep-Alive Ping Failed:", error.message);
+    }
 }, 600000); // ১০ মিনিট পরপর
 // পিং রাউট
 
 app.get('/ping', (req, res) => {
-  res.status(200).send("Server is awake! 🚀");
+    res.status(200).send("Server is awake! 🚀");
 });
 
 // ==========================================
