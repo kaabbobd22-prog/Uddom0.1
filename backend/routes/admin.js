@@ -294,5 +294,27 @@ router.get('/reports', verifyAdmin, async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
+router.get('/setup-live-admin', async (req, res) => {
+    try {
+        const bcrypt = require('bcryptjs');
+        const User = require('../models/User'); // আপনার User মডেলের পাথ ঠিক আছে কিনা দেখে নেবেন
+
+        // আগে থেকে অ্যাডমিন আছে কিনা চেক করা
+        const existingAdmin = await User.findOne({ email: 'admin@uddom.com' });
+        if (existingAdmin) return res.send("Admin already exists!");
+
+        const hashedPassword = await bcrypt.hash('admin1234', 10);
+        const adminUser = new User({
+            name: 'Super Admin',
+            email: 'admin@uddom.com',
+            password: hashedPassword,
+            role: 'admin'
+        });
+        await adminUser.save();
+        res.send("✅ Admin successfully created on Live Database!");
+    } catch (error) {
+        res.status(500).send("Error: " + error.message);
+    }
+});
 
 module.exports = router;
