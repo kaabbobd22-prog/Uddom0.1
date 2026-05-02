@@ -1,65 +1,69 @@
-// routes/order.js
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
 
-// ১. নতুন অর্ডার তৈরি করা (Checkout পেজ থেকে কল হবে)
+// 1. Create new order (from Checkout page)
 router.post('/', async (req, res) => {
     try {
         const newOrder = new Order(req.body);
         const savedOrder = await newOrder.save();
-        res.status(201).json({ success: true, order: savedOrder, message: "Order placed successfully!" });
+        res.status(201).json({ success: true, order: savedOrder, message: 'Order placed successfully!' });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
 });
 
-// ২. ইউজারের নিজের অর্ডার হিস্ট্রি দেখার জন্য
+// 2. Get a user's order history
+// BUG FIX: Was querying { user: id } but Order model field is 'customer'
 router.get('/user/:userId', async (req, res) => {
     try {
-        const orders = await Order.find({ user: req.params.userId }).sort({ createdAt: -1 });
+        const orders = await Order.find({ customer: req.params.userId })
+            .populate('products.product', 'name images price')
+            .sort({ createdAt: -1 });
         res.json(orders);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-// ৩. সেলারের অর্ডার দেখার জন্য (OrderManagement.jsx-এ ব্যবহার করা হয়েছে)
-router.get('/seller/:sellerName', async (req, res) => {
+// 3. Get orders for a seller (by seller ObjectId)
+router.get('/seller/:sellerId', async (req, res) => {
     try {
         const { status } = req.query;
-        // যে অর্ডারগুলোতে এই সেলারের আইটেম আছে সেগুলো খুঁজবে
-        let filter = { "items.seller": req.params.sellerName };
-
-        if (status && status !== 'All') {
-            filter.status = status;
-        }
-
-        const orders = await Order.find(filter).sort({ createdAt: -1 });
+        let filter = { seller: req.params.sellerId };
+        if (status && status !== 'All') filter.status = status;
+        const orders = await Order.find(filter)
+            .populate('customer', 'name email phone')
+            .populate('products.product', 'name images')
+            .sort({ createdAt: -1 });
         res.json(orders);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-// ৪. অর্ডার স্ট্যাটাস আপডেট করা (OrderManagement.jsx থেকে কল হবে)
+// 4. Update order status
 router.patch('/:id/status', async (req, res) => {
     try {
-        const updatedOrder = await Order.findByIdAndUpdate(
+        const updated = await Order.findByIdAndUpdate(
             req.params.id,
             { status: req.body.status },
             { new: true }
         );
-        res.json(updatedOrder);
+        if (!updated) return res.status(404).json({ message: 'Order not found' });
+        res.json(updated);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 });
-// একটি নির্দিষ্ট অর্ডার ফেচ করার রাউট
+
+// 5. Get single order by ID (for OrderTracking page)
 router.get('/:id', async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id);
-        if (!order) return res.status(404).json({ message: "Order not found" });
+        const order = await Order.findById(req.params.id)
+            .populate('customer', 'name email phone')
+            .populate('products.product', 'name images price');
+        if (!order) return res.status(404).json({ message: 'Order not found' });
         res.json(order);
     } catch (err) {
         res.status(500).json({ message: err.message });
