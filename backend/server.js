@@ -74,5 +74,4 @@ app.get('/', (req, res) => res.send('UDDOM Backend Server is Running...'));
 // BUG FIX: Was previously called twice, causing EADDRINUSE crash
 // ==========================================
 app.listen(PORT, () => console.log(`🚀 Server running on port: ${PORT}`));
-
 module.exports = app;
