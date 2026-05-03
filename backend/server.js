@@ -10,14 +10,14 @@ const PORT = process.env.PORT || 5000;
 // ==========================================
 // 1. Route Imports
 // ==========================================
-const authRoutes       = require('./routes/auth');
-const productRoutes    = require('./routes/products');
-const categoryRoutes   = require('./routes/categories');
-const wholesaleRoutes  = require('./routes/wholesale');
-const orderRoutes      = require('./routes/order');
-const userRoutes       = require('./routes/user');
-const adminRoutes      = require('./routes/admin');
-const sellerRoutes     = require('./routes/seller');
+const authRoutes = require('./routes/auth');
+const productRoutes = require('./routes/products');
+const categoryRoutes = require('./routes/categories');
+const wholesaleRoutes = require('./routes/wholesale');
+const orderRoutes = require('./routes/order');
+const userRoutes = require('./routes/user');
+const adminRoutes = require('./routes/admin');
+const sellerRoutes = require('./routes/seller');
 const sellerAuthRoutes = require('./routes/seller/auth');
 
 // ==========================================
@@ -25,10 +25,11 @@ const sellerAuthRoutes = require('./routes/seller/auth');
 // ==========================================
 app.use(cors({
     origin: [
-        process.env.FRONTEND_URL || 'https://your-frontend-link.onrender.com',
+        process.env.FRONTEND_URL || 'https://uddom0-1-harj.vercel.app',
         'http://localhost:5173',
         'http://localhost:3000'
     ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Explicitly define methods
     credentials: true
 }));
 app.use(express.json());
@@ -36,14 +37,14 @@ app.use(express.json());
 // ==========================================
 // 3. API Routes
 // ==========================================
-app.use('/api/auth',        authRoutes);
-app.use('/api/products',    productRoutes);
-app.use('/api/categories',  categoryRoutes);
-app.use('/api/wholesale',   wholesaleRoutes);
-app.use('/api/orders',      orderRoutes);
-app.use('/api/users',       userRoutes);
-app.use('/api/admin',       adminRoutes);
-app.use('/api/seller',      sellerRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/wholesale', wholesaleRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/seller', sellerRoutes);
 app.use('/api/seller/auth', sellerAuthRoutes);
 
 // ==========================================
