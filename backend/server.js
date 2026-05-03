@@ -25,7 +25,7 @@ const sellerAuthRoutes = require('./routes/seller/auth');
 // ==========================================
 app.use(cors({
     origin: [
-        process.env.FRONTEND_URL || 'https://uddom0-1-harj.vercel.app',
+        process.env.FRONTEND_URL || 'https://uddom0-1-harj.vercel.app/',
         'http://localhost:5173',
         'http://localhost:3000'
     ],
