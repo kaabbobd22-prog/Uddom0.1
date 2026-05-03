@@ -1,9 +1,8 @@
 // models/User.js
 const mongoose = require('mongoose');
 
-// অ্যাড্রেস স্কিমা
 const addressSchema = new mongoose.Schema({
-    type: { type: String, default: 'Home' }, // Home, Office, etc.
+    type: { type: String, default: 'Home' }, 
     name: { type: String, required: true },
     phone: { type: String, required: true },
     address: { type: String, required: true }
@@ -15,7 +14,15 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     phone: { type: String },
     avatar: { type: String, default: "https://placehold.co/150x150/000000/ffffff?text=U" },
-    addresses: [addressSchema] // ইউজারের মাল্টিপল অ্যাড্রেস থাকবে
+    
+    // 👇 এই নতুন ফিল্ডটি যোগ করুন
+    role: { 
+        type: String, 
+        enum: ['customer', 'admin', 'seller'], // আপনার প্রোজেক্টে যা যা রোল আছে
+        default: 'customer' 
+    },
+    
+    addresses: [addressSchema]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
