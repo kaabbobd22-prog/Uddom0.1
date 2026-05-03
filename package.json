@@ -1,8 +1,0 @@
-{
-  "name": "uddom-monorepo",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "cd udyom-frontend && npm install && npm run build",
-    "install": "cd udyom-frontend && npm install"
-  }
-}
