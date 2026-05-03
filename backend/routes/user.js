@@ -5,16 +5,14 @@ const User = require('../models/User');
 // GET user profile
 router.get('/:id', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id)
-            .select('-password')
-            .populate('wishlist', 'name images price');
-        if (!user) return res.status(404).json({ message: 'User not found' });
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
         res.json(user);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+    } catch (error) {
+        // ID format bhul hole ba undefined hole ekhane asbe
+        res.status(500).json({ message: "Server Error", error: error.message });
     }
 });
-
 // PUT update profile (name, phone, avatar)
 router.put('/:id', async (req, res) => {
     try {

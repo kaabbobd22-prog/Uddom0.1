@@ -82,20 +82,18 @@ router.get('/orders/recent', verifySeller, async (req, res) => {
     }
 });
 
-// ==========================================
-// 4. GET /api/seller/orders   (All seller orders with optional status filter)
-// ==========================================
-router.get('/orders', verifySeller, async (req, res) => {
+router.get('/orders/seller/me', verifySeller, async (req, res) => {
     try {
         const sellerId = req.seller.id;
         const { status } = req.query;
 
         const filter = { seller: sellerId };
+        // Status filter logic frontend onujayi
         if (status && status !== 'All') filter.status = status;
 
         const orders = await Order.find(filter)
             .sort({ createdAt: -1 })
-            .populate('customer', 'name email');
+            .populate('customer', 'name email phone'); // Phone add kora hoyeche logistics er jonno
 
         res.json(orders);
     } catch (error) {
@@ -105,12 +103,13 @@ router.get('/orders', verifySeller, async (req, res) => {
 });
 
 // ==========================================
-// 5. PUT /api/seller/orders/:orderId/status   (Update order status)
+// 5. PATCH /api/seller/orders/:orderId/status (Frontend PATCH use korche)[cite: 1]
 // ==========================================
-router.put('/orders/:orderId/status', verifySeller, async (req, res) => {
+router.patch('/orders/:orderId/status', verifySeller, async (req, res) => {
     try {
         const { status } = req.body;
         const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ message: "Invalid status value" });
         }
@@ -168,9 +167,9 @@ router.get('/finance', verifySeller, async (req, res) => {
         const sellerId = req.seller.id;
 
         const deliveredOrders = await Order.find({ seller: sellerId, status: 'Delivered' });
-        const pendingOrders   = await Order.find({ seller: sellerId, status: { $in: ['Pending', 'Processing', 'Shipped'] } });
+        const pendingOrders = await Order.find({ seller: sellerId, status: { $in: ['Pending', 'Processing', 'Shipped'] } });
 
-        const totalEarnings  = deliveredOrders.reduce((s, o) => s + (o.totalAmount || 0), 0);
+        const totalEarnings = deliveredOrders.reduce((s, o) => s + (o.totalAmount || 0), 0);
         const pendingBalance = pendingOrders.reduce((s, o) => s + (o.totalAmount || 0), 0);
 
         // Transactions: last 20 delivered/cancelled orders as ledger entries
@@ -211,8 +210,8 @@ router.get('/reports', verifySeller, async (req, res) => {
             createdAt: { $gte: fromDate }
         }).populate('products.product', 'name');
 
-        const totalOrders   = orders.length;
-        const netRevenue    = orders.filter(o => o.status === 'Delivered').reduce((s, o) => s + o.totalAmount, 0);
+        const totalOrders = orders.length;
+        const netRevenue = orders.filter(o => o.status === 'Delivered').reduce((s, o) => s + o.totalAmount, 0);
         const avgOrderValue = totalOrders > 0 ? Math.round(netRevenue / totalOrders) : 0;
 
         // Top 5 products by revenue
@@ -222,7 +221,7 @@ router.get('/reports', verifySeller, async (req, res) => {
                 const key = item.product?._id?.toString() || 'unknown';
                 const name = item.product?.name || 'Unknown Product';
                 if (!productMap[key]) productMap[key] = { name, sales: 0, revenue: 0 };
-                productMap[key].sales   += item.quantity;
+                productMap[key].sales += item.quantity;
                 productMap[key].revenue += item.quantity * item.priceAtPurchase;
             });
         });
