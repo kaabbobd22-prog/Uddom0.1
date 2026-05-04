@@ -23,29 +23,38 @@ const sellerAuthRoutes = require('./routes/seller/auth');
 // ==========================================
 // 2. Middlewares
 // ==========================================
+
+// ম্যানুয়াল CORS মিডলওয়্যার
 app.use((req, res, next) => {
     const allowedOrigins = [
         'https://uddom0-1-harj.vercel.app',
+        'https://uddom0-1.vercel.app',
         'http://localhost:5173',
         'http://localhost:3000'
     ];
+
     const origin = req.headers.origin;
 
+    // অরিজিন চেক করা
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
+    } else {
+        // যদি নির্দিষ্ট লিস্টে না থাকে, তবে অন্তত প্রথমটি ডিফল্ট হিসেবে দেওয়া (টেস্টিং এর জন্য)
+        res.setHeader('Access-Control-Allow-Origin', 'https://uddom0-1-harj.vercel.app');
     }
 
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-    // Pre-flight requests (OPTIONS) এর জন্য সাথে সাথে রেসপন্স দেওয়া
+    // Pre-flight (OPTIONS) রিকোয়েস্ট হ্যান্ডেল করা
     if (req.method === 'OPTIONS') {
         return res.sendStatus(200);
     }
     next();
 });
-app.use(express.json());
+
+app.use(express.json()); app.use(express.json());
 
 // ==========================================
 // 3. API Routes
