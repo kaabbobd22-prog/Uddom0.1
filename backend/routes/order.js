@@ -5,10 +5,21 @@ const Order = require('../models/Order');
 // 1. Create new order (from Checkout page)
 router.post('/', async (req, res) => {
     try {
+        // --- যোগ করুন এই অংশটি ---
+        // যদি টেস্টিং এর জন্য কোনো ইনভ্যালিড সেলার আইডি আসে যা 'ObjectId' নয়, সেটি রিমুভ করুন
+        const mongoose = require('mongoose');
+        if (req.body.seller && !mongoose.Types.ObjectId.isValid(req.body.seller)) {
+            // যদি আইডি ইনভ্যালিড হয় (যেমন আপনার স্ক্রিনশটের ওই ডিফল্ট স্ট্রিংটি), তবে এটি ডিলিট করে দিন
+            // অথবা আপনার ডাটাবেস থেকে একটি রিয়েল সেলার আইডি এখানে বসিয়ে দিন
+            delete req.body.seller;
+        }
+        // -------------------------
+
         const newOrder = new Order(req.body);
         const savedOrder = await newOrder.save();
         res.status(201).json({ success: true, order: savedOrder, message: 'Order placed successfully!' });
     } catch (err) {
+        console.error("Order Save Error:", err); // ডিবাগিং এর জন্য এটি রাখুন
         res.status(500).json({ success: false, message: err.message });
     }
 });
