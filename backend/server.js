@@ -23,15 +23,28 @@ const sellerAuthRoutes = require('./routes/seller/auth');
 // ==========================================
 // 2. Middlewares
 // ==========================================
-app.use(cors({
-    origin: [
-        process.env.FRONTEND_URL || 'https://uddom0-1-harj.vercel.app/',
+app.use((req, res, next) => {
+    const allowedOrigins = [
+        'https://uddom0-1-harj.vercel.app',
         'http://localhost:5173',
         'http://localhost:3000'
-    ],
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Explicitly define methods
-    credentials: true
-}));
+    ];
+    const origin = req.headers.origin;
+
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+    // Pre-flight requests (OPTIONS) এর জন্য সাথে সাথে রেসপন্স দেওয়া
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
 app.use(express.json());
 
 // ==========================================
