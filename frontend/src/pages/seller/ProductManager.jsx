@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import sellerAPI from '../../utils/sellerAxios';
 import SellerLayout from '../../layouts/SellerLayout';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5002/api';
 
 export default function ProductManagement() {
   const [activeView, setActiveView] = useState('list');
@@ -163,9 +163,8 @@ export default function ProductManagement() {
                             <td className="py-6 px-8 text-[10px] font-bold text-gray-500 uppercase tracking-widest">{product.category}</td>
                             <td className="py-6 px-8 text-sm font-black text-gray-900">৳{product.price?.toLocaleString()}</td>
                             <td className="py-6 px-8">
-                              <span className={`text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest ${
-                                product.isWholesale ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
-                              }`}>
+                              <span className={`text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest ${product.isWholesale ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
+                                }`}>
                                 {product.isWholesale ? 'Yes' : 'No'}
                               </span>
                             </td>

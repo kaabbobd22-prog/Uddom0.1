@@ -13,7 +13,7 @@ const generateProducts = () => {
 
     for (let i = 1; i <= 100; i++) {
         const category = categories[Math.floor(Math.random() * categories.length)];
-        const price = Math.floor(Math.random() * 5000) + 100;
+        const price = Math.floor(Math.random() * 5002) + 100;
         const discount = Math.random() > 0.7 ? Math.floor(Math.random() * 40) + 10 : 0; // ৩০% প্রোডাক্টে ডিসকাউন্ট থাকবে
 
         productList.push({

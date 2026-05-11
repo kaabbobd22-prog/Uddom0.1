@@ -5,7 +5,7 @@
 import axios from 'axios';
 
 const sellerAPI = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5002/api',
 });
 
 sellerAPI.interceptors.request.use((config) => {

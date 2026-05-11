@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5002/api';
 
 export default function SellerRegister() {
   const [step, setStep] = useState(1);
@@ -39,13 +39,13 @@ export default function SellerRegister() {
       // Step 1: Register
       await axios.post(`${BASE_URL}/seller/auth/register`, {
         ownerName: formData.ownerName,
-        email:     formData.email,
-        password:  formData.password
+        email: formData.email,
+        password: formData.password
       });
 
       // Step 2: Auto-login
       const loginRes = await axios.post(`${BASE_URL}/seller/auth/login`, {
-        email:    formData.email,
+        email: formData.email,
         password: formData.password
       });
 
@@ -56,11 +56,11 @@ export default function SellerRegister() {
 
         // Step 3: Save store settings
         const updateRes = await axios.put(`${BASE_URL}/seller/auth/settings/${seller.id}`, {
-          storeName:         formData.storeName,
-          phone:             formData.phone,
-          address:           '',
+          storeName: formData.storeName,
+          phone: formData.phone,
+          address: '',
           tradeLicenseOrNID: formData.tradeLicenseOrNID,
-          businessType:      formData.businessType
+          businessType: formData.businessType
         });
 
         localStorage.setItem('sellerData', JSON.stringify(updateRes.data.seller));

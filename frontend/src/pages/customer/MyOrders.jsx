@@ -87,7 +87,7 @@ export default function MyOrders() {
             filteredOrders.map((order) => {
               // অর্ডারের মোট আইটেম সংখ্যা (Backend products array consistency check)
               const totalItemsCount = order.products?.reduce((sum, item) => sum + item.quantity, 0) || 0;
-              
+
               // অর্ডারের প্রথম প্রোডাক্টের ছবি (Backend populate structure onujayi mapping)
               const displayImage = order.products?.[0]?.product?.images?.[0] || 'https://placehold.co/150';
 
@@ -129,7 +129,7 @@ export default function MyOrders() {
                       </p>
                       <div className="mt-3 flex gap-2">
                         <span className="text-[8px] md:text-[9px] bg-gray-100 text-gray-600 px-2 py-1 rounded-md font-black uppercase tracking-widest">
-                          {order.totalAmount > 5000 ? 'Wholesale Order' : 'Retail Order'}
+                          {order.totalAmount > 5002 ? 'Wholesale Order' : 'Retail Order'}
                         </span>
                         <span className="text-[8px] md:text-[9px] bg-gray-100 text-gray-600 px-2 py-1 rounded-md font-black uppercase tracking-widest">
                           {order.paymentMethod || 'COD'}
